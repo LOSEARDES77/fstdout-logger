@@ -6,8 +6,8 @@ use std::sync::Mutex;
 use thiserror::Error;
 
 mod config;
-pub mod formatter;
 pub mod examples;
+pub mod formatter;
 
 pub use config::{LoggerConfig, LoggerConfigBuilder};
 pub use formatter::LogFormatter;
@@ -25,7 +25,7 @@ pub enum LogError {
 pub struct FStdoutLogger {
     /// Optional file to log to
     log_file: Option<Mutex<File>>,
-    
+
     /// Formatter for log messages
     formatter: LogFormatter,
 }
@@ -35,15 +35,15 @@ impl FStdoutLogger {
     pub fn new<P: AsRef<Path>>(file_path: Option<P>) -> Result<Self, LogError> {
         Self::with_config(file_path, LoggerConfig::default())
     }
-    
+
     /// Create a new logger with custom configuration
-    pub fn with_config<P: AsRef<Path>>(file_path: Option<P>, config: LoggerConfig) -> Result<Self, LogError> {
+    pub fn with_config<P: AsRef<Path>>(
+        file_path: Option<P>,
+        config: LoggerConfig,
+    ) -> Result<Self, LogError> {
         let log_file = match file_path {
             Some(path) => {
-                let file = OpenOptions::new()
-                    .create(true)
-                    .append(true)
-                    .open(path)?;
+                let file = OpenOptions::new().create(true).append(true).open(path)?;
                 Some(Mutex::new(file))
             }
             None => None,
@@ -63,7 +63,7 @@ impl FStdoutLogger {
         log::set_max_level(LevelFilter::Trace);
         Ok(())
     }
-    
+
     /// Initialize the logger with a specific log level
     pub fn init_with_level(self, level: LevelFilter) -> Result<(), LogError> {
         if log::set_logger(Box::leak(Box::new(self))).is_err() {
@@ -86,7 +86,7 @@ impl Log for FStdoutLogger {
 
         // Format for stdout (with or without colors)
         let stdout_formatted = format!("{}\n", self.formatter.format_stdout(record));
-        
+
         // Log to stdout
         print!("{stdout_formatted}");
 
@@ -95,7 +95,7 @@ impl Log for FStdoutLogger {
             if let Ok(mut file) = file.lock() {
                 // Format for file (always without colors)
                 let file_formatted = self.formatter.format_file(record);
-                
+
                 // Ignore errors when writing to file as we don't want to crash the application
                 let _ = file.write_all(file_formatted.as_bytes());
             }
@@ -123,12 +123,18 @@ pub fn init_logger<P: AsRef<Path>>(file_path: Option<P>) -> Result<(), LogError>
 }
 
 /// Initialize a logger with a specific log level
-pub fn init_logger_with_level<P: AsRef<Path>>(file_path: Option<P>, level: LevelFilter) -> Result<(), LogError> {
+pub fn init_logger_with_level<P: AsRef<Path>>(
+    file_path: Option<P>,
+    level: LevelFilter,
+) -> Result<(), LogError> {
     FStdoutLogger::new(file_path)?.init_with_level(level)
 }
 
 /// Initialize a logger with custom configuration
-pub fn init_logger_with_config<P: AsRef<Path>>(file_path: Option<P>, config: LoggerConfig) -> Result<(), LogError> {
+pub fn init_logger_with_config<P: AsRef<Path>>(
+    file_path: Option<P>,
+    config: LoggerConfig,
+) -> Result<(), LogError> {
     let level = config.level;
     FStdoutLogger::with_config(file_path, config)?.init_with_level(level)
 }
@@ -155,7 +161,7 @@ pub fn init_simple_stdout_logger(level: LevelFilter) -> Result<(), LogError> {
         level,
         ..LoggerConfig::default()
     };
-    
+
     // Initialize with the config
     FStdoutLogger::with_config(None::<String>, config)?.init_with_level(level)
 }
@@ -174,7 +180,7 @@ mod tests {
             .level(LevelFilter::Debug)
             .show_file_info(false)
             .build();
-            
+
         let result = init_stdout_logger(config);
         assert!(result.is_ok());
     }
@@ -191,7 +197,7 @@ mod tests {
             .show_file_info(true)
             .use_colors(false)
             .build();
-            
+
         let result = init_logger_with_config(Some(test_file), config);
         assert!(result.is_ok());
 
@@ -201,19 +207,20 @@ mod tests {
         info!("This is an info message");
         warn!("This is a warning message");
         error!("This is an error message");
-        
+
         // Verify file contains logs
         let mut file = File::open(test_file).expect("Failed to open log file");
         let mut contents = String::new();
-        file.read_to_string(&mut contents).expect("Failed to read log file");
-        
+        file.read_to_string(&mut contents)
+            .expect("Failed to read log file");
+
         // Debug and higher should be logged
         assert!(!contents.contains("trace message"));
         assert!(contents.contains("debug message"));
         assert!(contents.contains("info message"));
         assert!(contents.contains("warning message"));
         assert!(contents.contains("error message"));
-        
+
         // Clean up
         let _ = fs::remove_file(test_file);
     }

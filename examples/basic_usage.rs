@@ -1,12 +1,12 @@
-use fstdout_logger::{init_logger_with_config, LoggerConfig};
-use log::{debug, error, info, trace, warn, LevelFilter};
+use fstdout_logger::{LoggerConfig, init_logger_with_config};
+use log::{LevelFilter, debug, error, info, trace, warn};
 use std::thread::sleep;
 use std::time::Duration;
 
 fn main() {
     // Initialize logger with file output and colored stdout
     let log_path = "application.log";
-    
+
     // Create a custom configuration
     let config = LoggerConfig::builder()
         .level(LevelFilter::Trace)
@@ -14,7 +14,7 @@ fn main() {
         .show_date_in_stdout(false)
         .use_colors(true)
         .build();
-        
+
     if let Err(e) = init_logger_with_config(Some(log_path), config) {
         eprintln!("Failed to initialize logger: {e}");
         return;

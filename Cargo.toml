@@ -1,10 +1,12 @@
 [package]
 name = "fstdout-logger"
+description = "An implementation of the log crate that logs to stdout and to an optional log file with configurable options."
+license = "MIT"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
 log = "0.4"
 chrono = "0.4"
-thiserror = "1.0"
-colored = "2.0"
+thiserror = "2.0.12"
+colored = "3.0.0"

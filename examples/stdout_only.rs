@@ -1,14 +1,14 @@
-use fstdout_logger::{init_stdout_logger, LoggerConfig};
-use log::{debug, error, info, trace, warn, LevelFilter};
+use fstdout_logger::{LoggerConfig, init_stdout_logger};
+use log::{LevelFilter, debug, error, info, trace, warn};
 
 fn main() {
     // Initialize logger with stdout only (no file output) with colors
     let config = LoggerConfig::builder()
         .level(LevelFilter::Debug)
-        .show_file_info(false)  // Don't show file and line information
-        .use_colors(true)       // Use colors in output
+        .show_file_info(false) // Don't show file and line information
+        .use_colors(true) // Use colors in output
         .build();
-        
+
     if let Err(e) = init_stdout_logger(config) {
         eprintln!("Failed to initialize logger: {e}");
         return;
