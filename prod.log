@@ -1,0 +1,10 @@
+[2025-05-12 13:57:09 INFO examples/production.rs:37] Production process starting up
+[2025-05-12 13:57:09 INFO examples/production.rs:44] Processing batch #1
+[2025-05-12 13:57:09 INFO examples/production.rs:44] Processing batch #2
+[2025-05-12 13:57:09 WARN examples/production.rs:46] Resource usage above threshold (82%)
+[2025-05-12 13:57:09 INFO examples/production.rs:44] Processing batch #3
+[2025-05-12 13:57:10 ERROR examples/production.rs:52] Failed to connect to database: timeout after 5 seconds
+[2025-05-12 13:57:10 INFO examples/production.rs:54] Production process completed
+[2025-05-12 13:59:42 INFO examples/production.rs:36] This message was logged with the actual logger
+[2025-05-12 13:59:42 WARN examples/production.rs:38] Warnings will appear
+[2025-05-12 13:59:42 ERROR examples/production.rs:39] Errors will appear too
