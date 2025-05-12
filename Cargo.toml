@@ -2,6 +2,7 @@
 name = "fstdout-logger"
 description = "An implementation of the log crate that logs to stdout and to an optional log file with configurable options."
 license = "MIT"
+repository = "https://github.com/LOSEARDES77/fstdout-logger"
 version = "0.1.0"
 edition = "2024"
 
