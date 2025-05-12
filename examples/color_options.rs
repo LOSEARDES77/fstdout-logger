@@ -3,9 +3,17 @@ use fstdout_logger::examples::{
 };
 
 fn main() {
-    // Demonstrate both plain text and colored log formats
+    // First demonstrate the difference between colored and plain text logs
+    println!("# Log Format Comparison\n");
+    println!("This example shows different log formats side by side.\n");
+
+    // Show plain text logs
     show_plain_log_examples();
+
+    // Show colored logs
     show_colored_log_examples();
+
+    // Show the difference with and without file information
     show_file_info_examples();
 
     println!("Note: This demonstration shows how logs appear with different configurations.");

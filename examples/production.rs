@@ -5,18 +5,28 @@ use std::thread::sleep;
 use std::time::Duration;
 
 fn main() {
-    // Compare production vs development logger output
-    println!("=== PRODUCTION LOGGER ===");
+    // Step 1: Compare production vs development logger output
+    println!("=== PRODUCTION LOGGER SIMULATION ===");
     // Production config: no file info, INFO level minimum
     let prod_config = LoggerConfig::production();
+    println!("Production settings:");
+    println!(" - Log level: Info (no Debug or Trace messages)");
+    println!(" - File info: Hidden (cleaner logs)");
+    println!(" - Colors: Enabled (for better readability)");
+    println!(" - Date in console: Hidden (time only for brevity)\n");
 
     // Manually format some logs with production settings
     format_and_print_logs("Production", &prod_config);
 
     // Reset logs
-    println!("\n\n=== DEVELOPMENT LOGGER ===");
+    println!("\n\n=== DEVELOPMENT LOGGER SIMULATION ===");
     // Development config: with file info, DEBUG level minimum
     let dev_config = LoggerConfig::development();
+    println!("Development settings:");
+    println!(" - Log level: Debug (includes debug messages)");
+    println!(" - File info: Shown (helps with debugging)");
+    println!(" - Colors: Enabled (for better readability)");
+    println!(" - Date in console: Hidden (time only for brevity)\n");
 
     // Manually format logs with development settings
     format_and_print_logs("Development", &dev_config);
@@ -26,8 +36,8 @@ fn main() {
         "but the log file still contains complete information including date and file details."
     );
 
-    // Initialize a real logger for demonstration
-    println!("\n=== ACTUAL LOGGER OUTPUT ===");
+    // Step 2: Initialize a real logger for demonstration
+    println!("\n=== ACTUAL LOGGER IMPLEMENTATION ===");
     println!("Initializing a real logger with production settings...");
     if let Err(e) = fstdout_logger::init_production_logger(Some("prod.log")) {
         eprintln!("Failed to initialize logger: {e}");
@@ -39,6 +49,8 @@ fn main() {
     debug!("Debug info won't appear in production mode");
     warn!("Warnings will appear");
     error!("Errors will appear too");
+
+    println!("\nCheck 'prod.log' to see the file output format with full details!");
 }
 
 // Helper function to format and print example log messages

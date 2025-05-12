@@ -40,7 +40,10 @@ pub fn show_colored_log_examples() {
     println!(" ");
 }
 
-/// Display example log messages without colors to demonstrate the output format
+/// Display example log messages without colors to demonstrate the output format.
+///
+/// Shows how log messages appear in plain text without any color formatting.
+/// This is similar to how logs would appear in a terminal with colors disabled.
 pub fn show_plain_log_examples() {
     println!("=== PLAIN TEXT LOG EXAMPLES ===");
 
@@ -59,7 +62,11 @@ pub fn show_plain_log_examples() {
     println!(" ");
 }
 
-/// Display example log messages with file information
+/// Display example log messages with file information.
+///
+/// Compares how logs appear with and without file/line information.
+/// This helps visualize the difference between development logs (with file info)
+/// and production logs (without file info).
 pub fn show_file_info_examples() {
     println!("=== LOGS WITH FILE INFO ===");
 
