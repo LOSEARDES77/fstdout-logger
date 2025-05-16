@@ -54,6 +54,7 @@
 //! fstdout_logger::init_production_logger(Some("app.log")).expect("Failed to initialize logger");
 //! ```
 
+use flate2::Compression;
 use log::{LevelFilter, Log, Metadata, Record};
 use std::fs::{File, OpenOptions};
 use std::io::{self, Write};
@@ -143,7 +144,30 @@ impl FStdoutLogger {
     ) -> Result<Self, LogError> {
         let log_file = match file_path {
             Some(path) => {
-                let file = OpenOptions::new().create(true).append(true).open(path)?;
+                let file = Path::new(path.as_ref()).to_path_buf();
+                if file.exists() {
+                    use flate2::write::GzEncoder;
+                    use tar::Builder;
+
+                    let file_basename = format!("{}", chrono::Local::now().format("%d%m%Y_%H%M%S"));
+                    let archive_ref = format!("{}.tar.xz", file_basename);
+                    let archive_file = File::create(&archive_ref)?;
+
+                    let encoder = GzEncoder::new(archive_file, Compression::default());
+                    let mut archive = Builder::new(encoder);
+
+                    archive.append_file(
+                        Path::new(&format!("{}.log", file_basename)),
+                        &mut File::open(file)?,
+                    )?;
+
+                    archive.into_inner().unwrap();
+                }
+                let file = OpenOptions::new()
+                    .create(true)
+                    .truncate(true)
+                    .write(true)
+                    .open(path)?;
                 Some(Mutex::new(file))
             }
             None => None,
