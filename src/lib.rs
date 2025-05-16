@@ -56,7 +56,7 @@
 
 use flate2::Compression;
 use log::{LevelFilter, Log, Metadata, Record};
-use std::fs::{File, OpenOptions};
+use std::fs::{File, OpenOptions, create_dir_all};
 use std::io::{self, Write};
 use std::path::Path;
 use std::sync::Mutex;
@@ -145,6 +145,9 @@ impl FStdoutLogger {
         let log_file = match file_path {
             Some(path) => {
                 let file = Path::new(path.as_ref()).to_path_buf();
+                if let Some(parent) = file.parent() {
+                    create_dir_all(parent)?;
+                };
                 if file.exists() {
                     use flate2::write::GzEncoder;
                     use tar::Builder;
